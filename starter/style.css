@@ -31,6 +31,7 @@ body {
   font-size: 2rem;
   opacity: 0;
   transition: opacity 1s;
+  
 }
 
 .country {
@@ -40,6 +41,7 @@ body {
   width: 30rem;
   border-radius: 0.7rem;
   margin: 2.3rem;
+  
 }
 .country_img{
   max-width: 30rem;
@@ -47,6 +49,17 @@ body {
 }
 .country_data{
   margin: 0.3rem;
-  
+  min-height: auto;
   
 }
+.country_name{
+  margin:1rem;
+}
+.country_region{
+  margin:1rem;
+}
+.country_row {
+  width: 40rem;
+  height: 8vh
+}
+ 
