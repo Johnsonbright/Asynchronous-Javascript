@@ -63,3 +63,12 @@ body {
   height: 8vh
 }
  
+.btn-country {
+  background-color: red;
+  color: white;
+  border: none;
+  width: 20vw;
+  height: 5vh;
+  border-radius: 5px;
+  display: relative;
+}
