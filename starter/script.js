@@ -1,21 +1,45 @@
 "use strict";
 const btn = document.querySelector(".btn-country");
 const countriesContainer = document.querySelector(".countries");
-// EVENT LOOP
-console.log('Test start'); // synchronous
-Promise.resolve('Resolved promise 1').then(res => console.log(res)); // asynchronous
-setTimeout(()=> console.log(`0 sec timer`), 0); // asynchronous
-console.log('test end'); // synchronous
-Promise.resolve('Resolved promise 2 ').then(res => {
-  for(let i = 0; i < 1000; i++) {}
-  console.log(res) // asynchronous
+//BUILDING SIMPLE PROMISES
+const lotteryDraw = new Promise(function(resolve, reject) {
+  console.log(`Lottery draw is happening`)
+  setTimeout(()=> {
+     
+    if ( Math.random() >= 0.5 ) {
+      resolve( `You win`)
+    }
+    else{
+      reject(new Error(`You lose`))
+    }
+  }, 2000)
+
+});
+
+lotteryDraw.then(res => console.log(res)).catch(err => console.error(err));
+
+
+const wait = function(seconds) {
+  return new Promise (function(resolve) {
+    setTimeout(resolve, seconds * 1000);
+  });
+};
+wait(2).then(()=> {
+  console.log('I waited for 1 seconds');
+return wait(1)
+}).then(()=> {
+  console.log('I waited for 2 seconds');
+return wait(1)
+}).then(()=> {
+  console.log('I waited for 3 seconds');
+return wait(1)
+}).then(() => {
+  console.log(`I waited for 4 second`)
 })
 
-//Which Events comes out first?
-
-// Promises which are callback are stored in microtasking queue which are usually first priority before the call back setTimeout which is stored in the callback queue waiting for the microtask to excecute  his code.
-
-
+// Another to resolve immediately
+Promise.resolve('abc').then(x => console.log(x));
+Promise.reject(new Error(`Problem`)).catch(x => console.error(x))
 // QUIZ
 
 // const renderCountry = function (data, className = "") {
