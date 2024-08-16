@@ -1,10 +1,71 @@
 "use strict";
 const btn = document.querySelector(".btn-country");
 const countriesContainer = document.querySelector(".countries");
+// QUIZ
+
+const wait = function (seconds) {
+  return new Promise(function (resolve) {
+    setTimeout(resolve, seconds * 1000);
+  });
+};
+const imageContainer = document.querySelector(".images");
+
+const createImage = function (imgPath) {
+  return new Promise(function (resolve, reject) {
+    const img = document.createElement("img");
+    img.src = imgPath;
+    img.style.width = "100vw";
+
+    img.addEventListener("load", function (e) {
+      e.preventDefault();
+      imageContainer.append(img);
+      resolve(img);
+    });
+    img.addEventListener("error", function (e) {
+      e.preventDefault();
+      reject(new Error(`Image not found`));
+    });
+  });
+};
+
+let currentImg;
+createImage(`img/image1.png`)
+  .then((img) => {
+    currentImg = img;
+    console.log("Image 1 loaded");
+    return wait(2);
+  })
+  .then(() => {
+    currentImg.style.display = "none";
+
+    return createImage("img/image2.jpg");
+  })
+  .then((img) => {
+    currentImg = img;
+    console.log(`image 2 loaded`);
+    return wait(2);
+  })
+  .then(() => {
+    currentImg.style.display = "none";
+  })
+  .catch((err) => console.error(err));
+
+// IF statement
+// if ('geolocation' in navigator) {
+//   navigator.geolocation.getCurrentPosition(function(position) {
+// let lat = position.coords.latitude;
+// let lng = position.coords.longitude;
+// console.log('Latitude'  + ' ' + lat + '\nLongitude' + lng);
+//   });
+// }
+// else{
+//   console.log('Geolocation is not supported by this browse')
+// }
 
 // RENDERING MY OWN GEO-LOCATION
 
 //
+
 const getPosition = function () {
   return new Promise((resolve, reject) => {
     // navigator.geolocation.getCurrentPosition(position => resolve(position), err => reject(err));
@@ -12,7 +73,6 @@ const getPosition = function () {
   });
 };
 // getPosition().then(pos => console.log(pos))
-
 
 const renderCountry = function (data, className = "") {
   // console.log(data);
@@ -39,7 +99,7 @@ const renderCountry = function (data, className = "") {
         </div>
       </article>`;
   countriesContainer.insertAdjacentHTML("beforeend", html);
-   countriesContainer.style.opacity = 1;
+  countriesContainer.style.opacity = 1;
 };
 const renderError = function (message) {
   countriesContainer.insertAdjacentText("beforeend", message);
@@ -61,14 +121,18 @@ const whereAmI = function () {
         throw new Error(response.status);
       }
       return response.json();
-    }).then((data) => {
+    })
+    .then((data) => {
       console.log(data);
-      console.log(`You are in ${data.address.city ?? data.address.state}, ${data.address.country}`)
+      console.log(
+        `You are in ${data.address.city ?? data.address.state}, ${
+          data.address.country
+        }`
+      );
       return getCountryData(data.address.country);
     })
     .catch((err) => console.error(` Something went wrong ${err}`));
 };
-
 
 const getJSON = function (url, errorMessage = "Something went wrong.") {
   return fetch(url).then((response) => {
@@ -87,13 +151,14 @@ const getCountryData = function (country) {
   return getJSON(
     `https://restcountries.com/v3.1/name/${country}`,
     `Can not access country`
-  ).then((data) => {
-   return renderCountry(data[0]);
-  }).catch(err => console.error(`${err.message}`))
+  )
+    .then((data) => {
+      return renderCountry(data[0]);
+    })
+    .catch((err) => console.error(`${err.message}`));
 };
 
-
-btn.addEventListener("click", whereAmI);
+// btn.addEventListener("click", whereAmI);
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 //BUILDING SIMPLE PROMISES
