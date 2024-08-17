@@ -22,30 +22,43 @@ const WhereAmi = async function () {
  const resGeo = await fetch(
     `https://geocode.maps.co/reverse?lat=${lat}&lon=${lng}&api_key=66b8c191808f7674335948vpfa1908f`
   );
-  console.log(resGeo)
   if(!resGeo.ok) {
     throw new Error(`Problem getting your location`)
   }
   const dataGeo = await resGeo.json();
-  console.log(dataGeo);
+ 
   
   //Country data
   const res = await fetch(`https://restcountries.com/v3.1/name/${dataGeo.address.country}`);
-  console.log(res);
-  if(!resGeo.ok) {
+  
+  if(!resGeo.ok) 
     throw new Error(`Problem getting country`)
-  }
-
   const data = await res.json();
   renderCountry(data[0])
+
+  return (`you are in ${dataGeo.address.state},${dataGeo.address.country}`)
 } catch (err) {
   console.error(err);
   renderError(`${err.message}`)
+  throw err
 }
 };
 
-console.log('hi')
-WhereAmi()
+// Returning values: Async calling another async function
+
+(async function() {
+  try{
+const city = await WhereAmi();
+console.log(`${city}`)
+  }
+  catch(err) {
+    console.log(`${err.message}`)
+  }
+  console.log(`Finished getting location`)
+})();
+
+
+
 // QUIZ 2
 // const wait = function (seconds) {
 //   return new Promise(function (resolve) {
