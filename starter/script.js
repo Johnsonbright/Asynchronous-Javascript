@@ -3,6 +3,7 @@ const btn = document.querySelector(".btn-country");
 const countriesContainer = document.querySelector(".countries");
 
 //QUIZ 3
+//Part 1
 const wait = function (seconds) {
     return new Promise(function (resolve) {
       setTimeout(resolve, seconds * 1000);
@@ -14,7 +15,7 @@ const wait = function (seconds) {
     return new Promise(function (resolve, reject) {
       const img = document.createElement("img");
       img.src = imgPath;
-      img.style.width = "100vw";
+      img.style.width = "50vw";
   
       img.addEventListener("load", function (e) {
         e.preventDefault();
@@ -31,18 +32,40 @@ const wait = function (seconds) {
   let currentImage;
  const loadNPause = async function() {
 try {
-const res = await createImage('img/image1.png');
-currentImage = res;
-currentImage.
+let img = await createImage('img/image1.png');
+console.log('image 1 loaded')
+await wait(2)
+img.style.display = 'none'
+
+
+ img = await createImage('img/image2.jpg');
+console.log('image 2 loaded')
+await wait(2)
+img.style.display = 'none'
 
 }
 catch(err){
-console.error(err)
+console.error(err.message)
 }
  }
 
- loadNPause()
-  
+ loadNPause();
+
+ // Part 2
+
+ const loadAll = async function(imageArr) {
+  try{
+const imgs = imageArr.map(async img => await createImage(img));
+console.log(imgs);
+
+const imgsEl = await Promise.all(imgs);
+console.log(imgsEl)
+  }catch(err) {
+console.error(err)
+  }
+
+ }
+  loadAll(['img/image1.png', 'img/image2.jpg'])
   // createImage(`img/image1.png`)
   //   .then((img) => {
   //     currentImg = img;
