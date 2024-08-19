@@ -2,36 +2,145 @@
 const btn = document.querySelector(".btn-country");
 const countriesContainer = document.querySelector(".countries");
 
-const getJSON = function (url, errorMessage = "Something went wrong.") {
-  return fetch(url).then((response) => {
-    console.log(response);
-    if (!response.ok) {
-      throw new Error(`${errorMessage} ${response.status}`);
-    }
+//QUIZ 3
+const wait = function (seconds) {
+    return new Promise(function (resolve) {
+      setTimeout(resolve, seconds * 1000);
+    });
+  };
+  const imageContainer = document.querySelector(".images");
+  
+  const createImage = async function (imgPath) {
+    return new Promise(function (resolve, reject) {
+      const img = document.createElement("img");
+      img.src = imgPath;
+      img.style.width = "100vw";
+  
+      img.addEventListener("load", function (e) {
+        e.preventDefault();
+        imageContainer.append(img);
+        resolve(img);
+      });
+      img.addEventListener("error", function (e) {
+        e.preventDefault();
+        reject(new Error(`Image not found`));
+      });
+    });
+  };
+  
+  let currentImage;
+ const loadNPause = async function() {
+try {
+const res = await createImage('img/image1.png');
+currentImage = res;
+currentImage.
 
-    return response.json();
-  });
-};
+}
+catch(err){
+console.error(err)
+}
+ }
 
-const get3countries = async function (c1, c2, c3) {
-  try {
-    // const [data1] = await getJSON(`https://restcountries.com/v3.1/name/${c1}`);
-    // const [data2] = await getJSON(`https://restcountries.com/v3.1/name/${c2}`);
-    // const [data3] = await getJSON(`https://restcountries.com/v3.1/name/${c3}`);
+ loadNPause()
+  
+  // createImage(`img/image1.png`)
+  //   .then((img) => {
+  //     currentImg = img;
+  //     console.log("Image 1 loaded");
+  //     return wait(2);
+  //   })
+  //   .then(() => {
+  //     currentImg.style.display = "none";
+  
+  //     return createImage("img/image2.jpg");
+  //   })
+  //   .then((img) => {
+  //     currentImg = img;
+  //     console.log(`image 2 loaded`);
+  //     return wait(2);
+  //   })
+  //   .then(() => {
+  //     currentImg.style.display = "none";
+  //   })
+  //   .catch((err) => console.error(err));
 
-    // Promise.all short circuit when one promise rejects.
-   const data = await Promise.all([
-      getJSON(`https://restcountries.com/v3.1/name/${c1}`),
-      getJSON(`https://restcountries.com/v3.1/name/${c2}`),
-      getJSON(`https://restcountries.com/v3.1/name/${c3}`),
-    ]);
-    console.log(data.map(d => d[0].capital));
-  } catch (err) {
-    console.error(err.message);
-  }
-};
 
-get3countries("portugal", "canada", "tanzania");
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// const getJSON = function (url, errorMessage = "Something went wrong.") {
+//   return fetch(url).then((response) => {
+//     // console.log(response);
+//     if (!response.ok) {
+//       throw new Error(`${errorMessage} ${response.status}`);
+//     }
+
+//     return response.json();
+//   });
+// };
+
+// // const get3countries = async function (c1, c2, c3) {
+// //   try {
+// // const [data1] = await getJSON(`https://restcountries.com/v3.1/name/${c1}`);
+// // const [data2] = await getJSON(`https://restcountries.com/v3.1/name/${c2}`);
+// // const [data3] = await getJSON(`https://restcountries.com/v3.1/name/${c3}`);
+
+// // Promise.all short circuit when one promise rejects.
+// //    const data = await Promise.all([
+// //       getJSON(`https://restcountries.com/v3.1/name/${c1}`),
+// //       getJSON(`https://restcountries.com/v3.1/name/${c2}`),
+// //       getJSON(`https://restcountries.com/v3.1/name/${c3}`),
+// //     ]);
+// //     console.log(data.map(d => d[0].capital));
+// //   } catch (err) {
+// //     console.error(err.message);
+// //   }
+// // };
+
+// // get3countries("portugal", "canada", "tanzania");
+
+// (async function () {
+//   const res = await Promise.race([
+//     getJSON(`https://restcountries.com/v3.1/name/senegal`),
+//     getJSON(`https://restcountries.com/v3.1/name/russia`),
+//     getJSON(`https://restcountries.com/v3.1/name/egypt`),
+//   ]);
+//   console.log(res[0]);
+// })();
+
+// // Other PROMISE COMBINATOR
+
+// // 1. Promise.race returns which ever one comes first
+// const timeout = function (secs) {
+//   return new Promise(function (_, reject) {
+//     setTimeout(function () {
+//       reject(new Error(`Request took too long`));
+//     }, secs * 1000);
+//   });
+// };
+
+// Promise.race([getJSON(`https://restcountries.com/v3.1/name/egypt`), timeout(3)])
+//   .then((res) => console.log(res[0]))
+//   .catch((err) => console.error(err));
+
+//   // Promise.allSettled
+//   Promise.allSettled([
+//     Promise.resolve('Success'),
+//     Promise.reject('ERROR'),
+//     Promise.resolve('Another Success')
+//   ]).then(res => console.log(res))
+
+//   Promise.all([
+//     Promise.resolve('Success'),
+//     Promise.reject('ERROR'),
+//     Promise.resolve('Another Success')
+//   ]).then(res => console.log(res)).catch(err=> console.error(err))
+
+//   Promise.all([
+//     Promise.resolve('Success'),
+//     Promise.reject('ERROR'),
+//     Promise.resolve('Another Success')
+//   ]).then(res => console.log(res)).catch(err=> console.error(err))
+
 
 // // ASYNC_AWAIT
 // const getPosition = function () {
@@ -150,37 +259,37 @@ get3countries("portugal", "canada", "tanzania");
 
 //
 
-const renderCountry = function (data, className = "") {
-  // console.log(data);
-  const html = `
-      <article class="country ${className}">
-        <img src="${
-          Object.values(data.flags ?? {})[0]
-        }" alt="" class="country_img" />
-        <div class="country_data">
-          <h3 class="country_name">${Object.values(data.name ?? {})[0]}</h3>
-          <h4 class="country_region"> ${data.region} </h4>
-          <p class="country_row">
-            <span>👨‍👨‍👧</span>
-            ${(+data.population / 1000000).toFixed(2)} People
-          </p>
-          <p class="country_row">
-            <span>🧏🏻‍♂️</span>
-            ${Object.values(data.languages ?? {})[0]} 
-          </p>
-          <p class="country_row">
-            <span>💰</span>
-            ${Object.keys(data.currencies ?? {})[0]}
-          </p>
-        </div>
-      </article>`;
-  countriesContainer.insertAdjacentHTML("beforeend", html);
-  countriesContainer.style.opacity = 1;
-};
-const renderError = function (message) {
-  countriesContainer.insertAdjacentText("beforeend", message);
-  //  countriesContainer.style.opacity = 1;
-};
+// const renderCountry = function (data, className = "") {
+//   // console.log(data);
+//   const html = `
+//       <article class="country ${className}">
+//         <img src="${
+//           Object.values(data.flags ?? {})[0]
+//         }" alt="" class="country_img" />
+//         <div class="country_data">
+//           <h3 class="country_name">${Object.values(data.name ?? {})[0]}</h3>
+//           <h4 class="country_region"> ${data.region} </h4>
+//           <p class="country_row">
+//             <span>👨‍👨‍👧</span>
+//             ${(+data.population / 1000000).toFixed(2)} People
+//           </p>
+//           <p class="country_row">
+//             <span>🧏🏻‍♂️</span>
+//             ${Object.values(data.languages ?? {})[0]}
+//           </p>
+//           <p class="country_row">
+//             <span>💰</span>
+//             ${Object.keys(data.currencies ?? {})[0]}
+//           </p>
+//         </div>
+//       </article>`;
+//   countriesContainer.insertAdjacentHTML("beforeend", html);
+//   countriesContainer.style.opacity = 1;
+// };
+// const renderError = function (message) {
+//   countriesContainer.insertAdjacentText("beforeend", message);
+//   //  countriesContainer.style.opacity = 1;
+// };
 
 // HERE:
 // const whereAmI = function () {
